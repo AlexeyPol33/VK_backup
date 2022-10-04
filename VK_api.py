@@ -44,7 +44,7 @@ class VK_api:
         self.__error()
 
         url = self.url +'photos.get'
-        params = {'owner_id': self.id}
+        params = {'owner_id': self.id, 'extended':'1'}
         response = requests.get(url = url, params={**self.params,**params, 'album_id' : 'wall'})
         response_2 = requests.get(url = url, params={**self.params, **params, 'album_id' : 'profile'})
 
