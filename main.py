@@ -1,6 +1,4 @@
 
-
-from cgi import test
 from VK_api import VK_api as VK
 from Yadisk_api import Yadisk_api as Yadisk
 import datetime
@@ -19,7 +17,7 @@ class Backup:
     def do_backup (self):
 
         folder_name = f'backup_{datetime.date.today()}'
-        self.yadisk_api.create_folder(folder_name)
+        folder_name = self.yadisk_api.create_folder(folder_name)
         self.yadisk_api.upload(folder_name, self.get_photo_list(self.vk_api.get_photos()))
 
         pass

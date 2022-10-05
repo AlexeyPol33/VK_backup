@@ -1,4 +1,5 @@
 
+from unicodedata import decimal
 import requests
 
 class Yadisk_api:
@@ -7,11 +8,22 @@ class Yadisk_api:
         self.token = token
         self.headers = {'Authorization': f'OAuth {self.token}'}
 
-    def create_folder (self, name): # TODO Реализовать проверку на конфликты имен папок
+    def create_folder (self, name) -> str: # 
         url = self.url + 'resources'
         params = dict(path = name)
         response = requests.put(url=url,headers=self.headers,params=params)
-        return response
+
+        counter = 1
+        while response.status_code == 409:
+            if name[-1].isdecimal() and name[-2] == '_':
+                name = name[:-2]
+            name = name + f'_{counter}'
+            params = dict(path = name)
+            response = requests.put(url=url,headers=self.headers,params=params)
+            counter +=1
+        get_folder_name = (requests.get(url=url,headers=self.headers,params=params)).json()['name']
+
+        return get_folder_name
 
     def upload (self,folder_name, files):
         """
