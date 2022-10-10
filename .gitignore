@@ -2,3 +2,6 @@ test.py
 photos
 confid.txt
 __pycache__
+quickstart.py
+credentials.json
+client_secrets.json

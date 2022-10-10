@@ -1,5 +1,4 @@
 
-from unicodedata import decimal
 import requests
 
 class Yadisk_api:
@@ -8,7 +7,7 @@ class Yadisk_api:
         self.token = token
         self.headers = {'Authorization': f'OAuth {self.token}'}
 
-    def create_folder (self, name) -> str: # 
+    def create_folder (self, name) -> str: 
         url = self.url + 'resources'
         params = dict(path = name)
         response = requests.put(url=url,headers=self.headers,params=params)

@@ -4,6 +4,7 @@ from Yadisk_api import Yadisk_api as Yadisk
 import datetime
 
 class Backup:
+
     def __init__(self,VK_access_token,VK_user_id, yandex_api_token) -> None:
     
         self.VK_access_token = VK_access_token
@@ -52,7 +53,7 @@ class Backup:
                 photos_list.pop(0)
             renamed_photos_list.append(element)
             counter = 1
-
+        
         return renamed_photos_list
 
 if __name__ == '__main__':
@@ -61,5 +62,7 @@ if __name__ == '__main__':
     vk_id = '' # Вк id профиля
 
     b = Backup(vk_token,vk_id,ya_token)
+    print(b.get_photo_list(b.vk_api.get_photos()))
+ 
 
     
