@@ -5,3 +5,4 @@ __pycache__
 quickstart.py
 credentials.json
 client_secrets.json
+settings.json

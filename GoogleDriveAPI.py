@@ -8,7 +8,8 @@ from progress.bar import IncrementalBar
             
 
 class GoogleDriveAPI:
-    __buffer_file = '_temporary_buffer_file_.tbf_local'
+    __BUFFER_FILE = '_temporary_buffer_file_.tbf_local'
+
     def __init__(self):
         self.drive = self.__get_drive() 
 
@@ -67,14 +68,14 @@ class GoogleDriveAPI:
         bar = IncrementalBar('Загрузка файлов в GoogleDrive', max = len(list_files))
         for file in list_files:
             response = requests.get(f'{list(file.values())[0]}')
-            with open(self.__buffer_file,'bw') as f:
+            with open(self.__BUFFER_FILE,'bw') as f:
                 f.write(response.content)
             metadete = {
                 "parents": [{"kind": f"drive#{folder}", "id": folder_id}],
                 'title': f'{list(file.keys())[0]}',
                 'mimeType': 'image/jpeg'}
             file = self.drive.CreateFile(metadata=metadete)
-            file.SetContentFile(self.__buffer_file)
+            file.SetContentFile(self.__BUFFER_FILE)
             file.Upload()
             bar.next()
         bar.finish()
@@ -82,15 +83,8 @@ class GoogleDriveAPI:
     def do_backup (self,folder_name,list_files):
         folder_name = self.create_folder(folder_name)
         self.__upload_files(folder_name,list_files)
-        os.remove(self.__buffer_file)
+        os.remove(self.__BUFFER_FILE)
 
-
-    
-
-if __name__ == '__main__':
-    file_list = []
-    dr = GoogleDriveAPI()
-    dr.do_backup('test',file_list)
    
 
     

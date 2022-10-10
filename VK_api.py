@@ -13,7 +13,7 @@ class VK_api:
         self.params = {'access_token': self.access_token, 'v': self.version}
 
     def users_info(self):
-        
+
        url = self.url +'users.get'
        params = {'user_ids': self.id}
        response = requests.get(url, params={**self.params, **params})
@@ -34,13 +34,10 @@ class VK_api:
             print('error: ' + 'Профиль закрыт')
             sys.exit()
 
-        pass
-
     def get_photos (self):
         """ 
         Метод возвращает список фотографий в альбоме формата [{фотографии с профиля},{фотографии со стены}].
         """
-
         self.__error()
 
         url = self.url +'photos.get'
@@ -56,7 +53,6 @@ class VK_api:
         Метод сохраняет <<content>> в json файл с названием <<file_name>> без перезаписи,
         если файл с названием <<file_name>> уже существует, создается файл с названием <<file_name>>_число 
         """
-
         extension = '.json'
         counter = 1
         file_name_copy = file_name
@@ -67,5 +63,6 @@ class VK_api:
         with open(file_name,'w') as f:
             json.dump(content, f)
         pass
+    
 
     

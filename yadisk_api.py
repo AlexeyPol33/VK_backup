@@ -1,5 +1,6 @@
 
 import requests
+from progress.bar import IncrementalBar
 
 class Yadisk_api:
     def __init__(self, token) -> None:
@@ -30,24 +31,19 @@ class Yadisk_api:
         параметр files представляет собой лист словарей вида: [{'Имя файл.расширение':'url'},...]
         имена не должны повторяться, иначе загрузка будет не корректна """
         url = self.url + 'resources/upload'
-        
 
-        try:
-            from progress.bar import IncrementalBar #Прогресс бар
-            bar = IncrementalBar('Загрузка', max = len(files))
-        except:
-            pass
 
+
+        bar = IncrementalBar('Загрузка в Яндекс Диск', max = len(files))
         for i in files:
-            params = {'path':f'/{folder_name}/{list(i.keys())[0]}','url':f'{list(i.values())[0]}', 'replace':'false'}
+            params = {'path':f'/{folder_name}/{list(i.keys())[0]}',
+            'url':f'{list(i.values())[0]}', 
+            'replace':'false'}
             requests.post(url=url, headers=self.headers, params=params)
-            
-            try:
-                bar.next()
-            except:
-                pass
+            bar.next()
+        bar.finish()
 
-        try:
-            bar.finish()
-        except:
-            pass
+    def do_backup (self,folder_name, photos_list):
+        folder_name = self.create_folder(folder_name)
+        self.upload(folder_name, photos_list)
+
