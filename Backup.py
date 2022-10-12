@@ -1,9 +1,11 @@
 
 import sys
-from GoogleDriveAPI import GoogleDriveAPI
-from VK_api import VK_api as VK
-from Yadisk_api import Yadisk_api as Yadisk
+from google_drive_api import GoogleDriveAPI
+from vk_api import VKapi as VK
+from yadisk_api import YaDisk 
 import datetime
+import os
+import json
 
 class Backup:
     def __init__(self,VK_access_token,VK_user_id, yandex_api_token=None,backup_yandex=False,backup_google=False) -> None:
@@ -12,20 +14,20 @@ class Backup:
         self.VK_id = VK_user_id
         self.vk_api = VK(access_token=self.VK_access_token, user_id=self.VK_id)
 
-        folder_name = f'backup_{datetime.date.today()}'
-        fotos = self.get_photo_list(self.vk_api.get_photos())
+        self.folder_name = f'backup_{datetime.date.today()}'
+        self.photos = self.get_photo_list(self.vk_api.get_photos())
 
         if (backup_yandex and backup_google):
             self.ya_token = yandex_api_token
-            self.yadisk_api = Yadisk(self.ya_token)
-            self.yadisk_api.do_backup(folder_name,fotos)
-            GoogleDriveAPI().do_backup(folder_name,fotos)
+            self.yadisk_api = YaDisk(self.ya_token)
+            self.yadisk_api.do_backup(self.folder_name,self.photos)
+            GoogleDriveAPI().do_backup(self.folder_name,self.photos)
         elif backup_yandex:
             self.ya_token = yandex_api_token
-            self.yadisk_api = Yadisk(self.ya_token)
-            self.yadisk_api.do_backup(folder_name,fotos)
+            self.yadisk_api = YaDisk(self.ya_token)
+            self.yadisk_api.do_backup(self.folder_name,self.photos)
         elif backup_google:
-            GoogleDriveAPI().do_backup(folder_name,fotos)
+            GoogleDriveAPI().do_backup(self.folder_name,self.photos)
         else:
             sys.exit()
 
@@ -37,7 +39,9 @@ class Backup:
 
         for res in vk_photos:
             for photo in res['response']['items']:
-                photos_list.append({str(photo['likes']['count']) + '.jpg':(photo['sizes'][-1]['url'])})
+                _name = str(photo['likes']['count']) + '.jpg'
+                _url = photo['sizes'][-1]['url']
+                photos_list.append({ _name : _url})
         
         renamed_photos_list = []
         counter = 1                
@@ -61,5 +65,24 @@ class Backup:
             counter = 1
         
         return renamed_photos_list
+    
+    def save_to_file (self) -> None:
+        """
+        Метод сохраняет <<content>> в json файл с названием <<file_name>> без перезаписи,
+        если файл с названием <<file_name>> уже существует, создается файл с названием <<file_name>>_число 
+        """
+        content = self.photos 
+        file_name = self.folder_name
+
+        extension = '.json'
+        counter = 1
+        file_name_copy = file_name
+        while os.path.exists(file_name + extension):
+            file_name = file_name_copy +'_'+ str(counter)
+            counter += 1
+        file_name = file_name + '.json'
+        with open(file_name,'w') as f:
+            json.dump(content, f)
+        pass
 
 

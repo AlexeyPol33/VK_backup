@@ -125,14 +125,14 @@ if __name__ == '__main__':
             print('Ответ не распознан')
             continue
 
-        Backup(VK_access_token=settings['vk_access'],
+        backup = Backup(VK_access_token=settings['vk_access'],
         VK_user_id=settings['vk_id'],
         yandex_api_token=settings['ya_access_token'],
         backup_yandex=yandex_disk,backup_google=google_drive)
+
+        print ('Сохранить информацию по фотографиям в json-файл?')
+        if input('(y/n): ').lower() == 'y':
+            backup.save_to_file()
         break
-            
-
-
 
     print('завершена работа программы')
-    pass

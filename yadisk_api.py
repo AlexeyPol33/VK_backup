@@ -2,7 +2,7 @@
 import requests
 from progress.bar import IncrementalBar
 
-class Yadisk_api:
+class YaDisk:
     def __init__(self, token) -> None:
         self.url = 'https://cloud-api.yandex.net/v1/disk/'
         self.token = token
@@ -21,7 +21,9 @@ class Yadisk_api:
             params = dict(path = name)
             response = requests.put(url=url,headers=self.headers,params=params)
             counter +=1
-        get_folder_name = (requests.get(url=url,headers=self.headers,params=params)).json()['name']
+        
+        get_folder_name = (requests.get(url=url,headers=self.headers,params=params))
+        get_folder_name = get_folder_name.json()['name']
 
         return get_folder_name
 
@@ -31,8 +33,6 @@ class Yadisk_api:
         параметр files представляет собой лист словарей вида: [{'Имя файл.расширение':'url'},...]
         имена не должны повторяться, иначе загрузка будет не корректна """
         url = self.url + 'resources/upload'
-
-
 
         bar = IncrementalBar('Загрузка в Яндекс Диск', max = len(files))
         for i in files:

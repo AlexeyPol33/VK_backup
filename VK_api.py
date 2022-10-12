@@ -4,7 +4,7 @@ import requests
 import json
 import sys
 
-class VK_api:
+class VKapi:
     def __init__(self, access_token, user_id) -> None:
         self.access_token = access_token
         self.id = user_id
@@ -48,21 +48,7 @@ class VK_api:
         out = [response_2.json(), response.json()]
         return out
 
-    def save_to_file (self,file_name,content) -> None:
-        """
-        Метод сохраняет <<content>> в json файл с названием <<file_name>> без перезаписи,
-        если файл с названием <<file_name>> уже существует, создается файл с названием <<file_name>>_число 
-        """
-        extension = '.json'
-        counter = 1
-        file_name_copy = file_name
-        while os.path.exists(file_name + extension):
-            file_name = file_name_copy +'_'+ str(counter)
-            counter += 1
-        file_name = file_name + '.json'
-        with open(file_name,'w') as f:
-            json.dump(content, f)
-        pass
+
     
 
     
